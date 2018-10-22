@@ -5,12 +5,18 @@ class KeywordAdmin(admin.ModelAdmin):
     fields = ('title', 'active', 'sort')
 admin.site.register(Keyword,KeywordAdmin)
 
+class AnswerInline(admin.TabularInline):
+    model = Answer
 class QuestionAdmin(admin.ModelAdmin):
     fields = ('title', 'description', 'keyword', 'active', 'sort')
+    inlines = [
+        AnswerInline,
+    ]
 admin.site.register(Question,QuestionAdmin)
 
 class AnswerAdmin(admin.ModelAdmin):
     fields = ('title', 'description', 'question', 'is_correct', 'active', 'sort')
+
 admin.site.register(Answer,AnswerAdmin)
 
 class TestCategoryAdmin(admin.ModelAdmin):
