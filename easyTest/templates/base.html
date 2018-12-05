@@ -1,0 +1,95 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    {% block title %}
+        <title>Base</title>
+    {% endblock title %}
+
+    {% block styles %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href= "{% static 'css/style.css' %}?v={{ VERSION }}" >
+    {% endblock styles %}
+
+    <link rel="shortcut icon" href="/media/images/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+    {% block javascript %}
+    {% endblock javascript %}
+
+</head>
+
+<body>
+{% with request.resolver_match.kwargs as url_kwargs %}
+<div class="header">
+    <div class="center_content_header">
+        <div class="logo">
+            <i class="fas fa-check-circle"></i>
+            <a href="{% url 'mainapp:main' %}">easytest</a>
+        </div>
+
+        <div class="menu">
+            <ul>
+                <li><a href="{% url 'mainapp:main' %}">{% trans 'На главную' %}</a></li>
+                <li><a href="{% if user.is_staff %}#{% else %}{% url 'mainapp:tests' %}{% endif %}">{% trans 'Тесты' %}</a>
+                    {% if user.is_staff %}
+                        <ul>
+                            <li><a href="{% url 'mainapp:tests_staff' %}">{% trans 'Мои тесты' %}</a></li>
+                            <li><a href="{% url 'mainapp:test_create' %}">{% trans 'Создать тест' %}</a></li>
+                        </ul>
+                    {% endif %}
+                </li>
+
+                {% if user.is_authenticated %}
+                    <li><a href="{% if user.is_staff %}#{% else %}{% url 'mainapp:results' user.id %}{% endif %}">{% trans 'Результаты' %}</a>
+                        {% if user.is_staff %}
+                            <ul>
+                                <li><a href="{% url 'mainapp:results' user.id %}">{% trans 'Мои' %}</a>
+                                <li><a href="{% url 'mainapp:groups' %}">{% trans 'Студентов' %}</a></li>
+                            </ul>
+                        {% endif %}
+                    </li>
+                {% endif %}
+
+                {% if user.is_staff %}
+                    <li><a href="{% url 'mainapp:groups' %}">{% trans 'Группы' %}</a></li>
+                    <li><a href="{% url 'mainapp:students' %}">{% trans 'Студенты' %}</a></li>
+                {% endif %}
+
+                <li><a href="#">{% trans 'Контакты' %}</a></li>
+            </ul>
+        </div>
+
+        <div class="menu">
+            <ul>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'auth:edit' %}">{% trans 'Привет, ' %}{{ user.first_name|default:user.username }}</a></li>
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'admin:index' %}">{% trans 'Admin panel' %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'auth:logout' %}">{% trans 'Выйти' %}</a></li>
+                {% else %}
+                    <li><a href="{% url 'auth:login' %}">{% trans 'Войти' %}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="content">
+    {% block content %}
+    {% endblock content %}
+</div>
+<div class="footer">
+    <p>GeekUniversity Python 10/06/18</p>
+</div>
+{% endwith %}
+</body>
+
+</html>

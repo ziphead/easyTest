@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}
+    <title>{% trans 'Создание группы студентов' %}</title>
+{% endblock title%}
+
+{% block content %}
+
+<div class="center_full">
+    <form class="form_create" action="#" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <div class="center">
+      	  <input type="submit" name="#" value="{% trans 'Сохранить' %}" class="btn btn-secondary">
+        </div>
+    </form>
+</div>
+
+{% endblock content %}
